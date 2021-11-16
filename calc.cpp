@@ -16,8 +16,9 @@ public:
     ~Calc();
 
     int evalExpr(const std::string &expr, int &result);
+
+    int var_exist(std::string var);
 private:
-    // private member functions
     
 };
 
@@ -33,17 +34,40 @@ extern "C" int calc_eval(struct Calc *calc, const char *expr, int *result) {
     return calc->evalExpr(expr, *result);
 }
 
-int Calc::evalExpr(const std::string &expr, int &result) {
+extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
     std::vector<std::string> tokens = tokenize(expr);
     int num_tokens = tokens.size();
-    if (num_tokens > 5 || num_tokens == 4 || num_tokens == 2 || num_tokens < 1)
-    {
-        return 0;
-    }
     
+    switch (num_tokens)
+    {
+        case 1:
+        {
+            std::string operand = tokens.at(1);
+            if (is_integer(operand) == 1)
+            {
+                result = std::stoi(operand);
+                return 1;       // evaluation succeeds
+            }
+            else if (is_variable(operand) == 1)
+            {
+                if (var_exist(operand) == 1)
+                {
+                    result = this->var_dict.at(operand);
+                    return 1;       // evaluation succeeds
+                }
+            }
+            
+            break;
+        }
+        default:
+        {
+        return 0;
+        }
+    }
+    return 0;
 }
 
-std::vector<std::string> tokenize(const std::string &expr) {
+extern "C" std::vector<std::string> tokenize(const std::string &expr) {
     std::vector<std::string> vec;
     std::stringstream s(expr);
 
@@ -53,4 +77,40 @@ std::vector<std::string> tokenize(const std::string &expr) {
     }
 
     return vec;
+}
+
+extern "C" int is_variable(std::string operand) {
+
+    for (std::string::iterator it = operand.begin(); it != operand.end(); it++)
+    {
+        if (isalpha(*it) == 0)
+        {
+            return 0;       // operand is not valid variable
+        }
+        
+    }
+    
+    return 1;       // operand is variable
+}
+
+extern "C" int is_integer(std::string operand) {
+    for (std::string::iterator it = operand.begin(); it != operand.end(); it++)
+    {
+        if (isdigit(*it) == 0)
+        {
+            return 0;       // operand is not valid integer
+        }
+        
+    }
+
+    return 1;       // operand is integer
+}
+
+extern "C" int Calc::var_exist(std::string var) {
+    if (var_dict.find(var) != var_dict.end())
+    {
+        return 1;       // variable found
+    }
+    
+    return 0;       // variable not found
 }
