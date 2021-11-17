@@ -25,6 +25,10 @@ private:
     int is_variable(std::string operand);
 
     int is_integer(std::string operand);
+
+    int is_operand(std::string operand);
+
+    int is_operator(std::string op);
 };
 
 Calc::Calc() {};
@@ -69,6 +73,39 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
             break;
         }
 
+        case 3:
+        {
+            std::string operand1 = tokens.at(0);
+            std::string op = tokens.at(1);
+            std::string operand2 = tokens.at(2);
+            
+            if (is_integer(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op) == 1)
+            {
+                switch (op[0])
+                {
+                case '+':
+                    result = std::stoi(operand1) + std::stoi(operand2);
+                    return 1;
+                    break;
+                case '-':
+                    result = std::stoi(operand1) - std::stoi(operand2);
+                    return 1;
+                    break;
+                case '*':
+                    result = std::stoi(operand1) * std::stoi(operand2);
+                    return 1;
+                    break;
+                case '/':
+                    result = std::stoi(operand1) / std::stoi(operand2);
+                    return 1;
+                    break;
+                default:
+                    break;
+                }
+            }
+            
+            
+        }
         default:
         {
         return 0;
@@ -123,4 +160,23 @@ extern "C" int Calc::var_exist(std::string var) {
     }
     
     return 0;       // variable not found
+}
+
+extern "C" int Calc::is_operand(std::string operand) {
+    if (is_integer(operand) == 1 || is_variable(operand) == 1)
+    {
+        return 1;       // is valid operand
+    }
+    
+    return 0;       // is not valid operand
+}
+
+extern "C" int Calc::is_operator(std::string op) {
+    std::vector<std::string> operators {"+", "-", "*", "/"};
+    if (std::find(operators.begin(), operators.end(), op) != operators.end())
+    {
+        return 1;       // is valid operator
+    }
+    
+    return 0;       // is not valid operator
 }
