@@ -1,4 +1,5 @@
 #include "calc.h"
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -19,8 +20,16 @@ public:
 
     int var_exist(std::string var);
 private:
-    
+    std::vector<std::string> tokenize(const std::string &expr);
+
+    int is_variable(std::string operand);
+
+    int is_integer(std::string operand);
 };
+
+Calc::Calc() {};
+
+Calc::~Calc() {};
 
 extern "C" struct Calc *calc_create(void) {
     return new Calc();
@@ -42,7 +51,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
     {
         case 1:
         {
-            std::string operand = tokens.at(1);
+            std::string operand = tokens.at(0);
             if (is_integer(operand) == 1)
             {
                 result = std::stoi(operand);
@@ -59,6 +68,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
             
             break;
         }
+
         default:
         {
         return 0;
@@ -67,7 +77,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
     return 0;
 }
 
-extern "C" std::vector<std::string> tokenize(const std::string &expr) {
+extern "C" std::vector<std::string> Calc::tokenize(const std::string &expr) {
     std::vector<std::string> vec;
     std::stringstream s(expr);
 
@@ -79,7 +89,7 @@ extern "C" std::vector<std::string> tokenize(const std::string &expr) {
     return vec;
 }
 
-extern "C" int is_variable(std::string operand) {
+extern "C" int Calc::is_variable(std::string operand) {
 
     for (std::string::iterator it = operand.begin(); it != operand.end(); it++)
     {
@@ -93,7 +103,7 @@ extern "C" int is_variable(std::string operand) {
     return 1;       // operand is variable
 }
 
-extern "C" int is_integer(std::string operand) {
+extern "C" int Calc::is_integer(std::string operand) {
     for (std::string::iterator it = operand.begin(); it != operand.end(); it++)
     {
         if (isdigit(*it) == 0)
