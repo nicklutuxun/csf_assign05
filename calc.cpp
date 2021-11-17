@@ -103,7 +103,73 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             }
-            
+            else if (is_operand(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op) == 1)
+            {
+                switch (op[0])
+                {
+                case '+':
+                    result = var_dict.at(operand1) + std::stoi(operand2);
+                    return 1;
+                    break;
+                case '-':
+                    result = var_dict.at(operand1) - std::stoi(operand2);
+                    return 1;
+                    break;
+                case '*':
+                    result = var_dict.at(operand1) * std::stoi(operand2);
+                    return 1;
+                    break;
+                case '/':
+                    result = var_dict.at(operand1) / std::stoi(operand2);
+                    return 1;
+                    break;
+                case '=':
+                    if (var_exist(operand1) == 0)
+                    {
+                        var_dict.insert(std::pair<std::string, int>(operand1, std::stoi(operand2)));
+                    } else {
+                        var_dict.at(operand1) = std::stoi(operand2);
+                    }
+                    result = var_dict.at(operand1);
+                    return 1;
+                    break;
+                default:
+                    break;
+                }
+            } else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op) == 1)
+            {
+                switch (op[0])
+                {
+                case '+':
+                    result = var_dict.at(operand1) + var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '-':
+                    result = var_dict.at(operand1) - var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '*':
+                    result = var_dict.at(operand1) * var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '/':
+                    result = var_dict.at(operand1) / var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '=':
+                    if (var_exist(operand1) == 0)
+                    {
+                        var_dict.insert(std::pair<std::string, int>(operand1, var_dict.at(operand2)));
+                    } else {
+                        var_dict.at(operand1) = var_dict.at(operand2);
+                    }
+                    result = var_dict.at(operand1);
+                    return 1;
+                    break;
+                default:
+                    break;
+                }
+            }
             
         }
         default:
@@ -172,7 +238,7 @@ extern "C" int Calc::is_operand(std::string operand) {
 }
 
 extern "C" int Calc::is_operator(std::string op) {
-    std::vector<std::string> operators {"+", "-", "*", "/"};
+    std::vector<std::string> operators {"+", "-", "*", "/", "="};
     if (std::find(operators.begin(), operators.end(), op) != operators.end())
     {
         return 1;       // is valid operator
