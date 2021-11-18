@@ -98,7 +98,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (std::stoi(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     result = std::stoi(operand1) / std::stoi(operand2);
@@ -126,7 +126,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (std::stoi(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     result = var_dict.at(operand1) / std::stoi(operand2);
@@ -164,7 +164,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (var_dict.at(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     result = var_dict.at(operand1) / var_dict.at(operand2);
@@ -211,7 +211,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (std::stoi(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     temp_res = std::stoi(operand1) / std::stoi(operand2);
@@ -235,7 +235,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (std::stoi(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     temp_res = var_dict.at(operand1) / std::stoi(operand2);
@@ -259,7 +259,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 case '/':
                     if (var_dict.at(operand2) == 0) {
-                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
                         return 0;
                     }
                     temp_res = var_dict.at(operand1) / var_dict.at(operand2);
