@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <cctype>
+#include <algorithm>
 
 struct Calc {
 private:
@@ -31,9 +32,9 @@ private:
     int is_operator(std::string op);
 };
 
-Calc::Calc() {};
+Calc::Calc() {}
 
-Calc::~Calc() {};
+Calc::~Calc() {}
 
 extern "C" struct Calc *calc_create(void) {
     return new Calc();
@@ -96,6 +97,10 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     return 1;
                     break;
                 case '/':
+                    if (std::stoi(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
                     result = std::stoi(operand1) / std::stoi(operand2);
                     return 1;
                     break;
@@ -120,6 +125,10 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     return 1;
                     break;
                 case '/':
+                    if (std::stoi(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
                     result = var_dict.at(operand1) / std::stoi(operand2);
                     return 1;
                     break;
@@ -136,7 +145,8 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                 default:
                     break;
                 }
-            } else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op) == 1)
+            } 
+            else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op) == 1)
             {
                 switch (op[0])
                 {
@@ -153,6 +163,10 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     return 1;
                     break;
                 case '/':
+                    if (var_dict.at(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
                     result = var_dict.at(operand1) / var_dict.at(operand2);
                     return 1;
                     break;
@@ -170,11 +184,111 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             }
+            break;
             
+        }
+        case 5:
+        {
+            std::string var = tokens.at(0);
+            std::string op1 = tokens.at(1);
+            std::string operand1 = tokens.at(2);
+            std::string op2 = tokens.at(3);
+            std::string operand2 = tokens.at(4);
+            int temp_res = 0;
+
+            if (is_integer(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op2) == 1)
+            {
+                switch (op2[0])
+                {
+                case '+':
+                    temp_res = std::stoi(operand1) + std::stoi(operand2);
+                    break;
+                case '-':
+                    temp_res = std::stoi(operand1) - std::stoi(operand2);
+                    break;
+                case '*':
+                    temp_res = std::stoi(operand1) * std::stoi(operand2);
+                    break;
+                case '/':
+                    if (std::stoi(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
+                    temp_res = std::stoi(operand1) / std::stoi(operand2);
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (is_operand(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op2) == 1)
+            {
+                switch (op2[0])
+                {
+                case '+':
+                    temp_res = var_dict.at(operand1) + std::stoi(operand2);
+                    break;
+                case '-':
+                    temp_res = var_dict.at(operand1) - std::stoi(operand2);
+                    break;
+                case '*':
+                    temp_res = var_dict.at(operand1) * std::stoi(operand2);
+                    break;
+                case '/':
+                    if (std::stoi(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
+                    temp_res = var_dict.at(operand1) / std::stoi(operand2);
+                    break;
+                default:
+                    break;
+                }
+            } 
+            else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op2) == 1)
+            {
+                switch (op2[0])
+                {
+                case '+':
+                    temp_res = var_dict.at(operand1) + var_dict.at(operand2);
+                    break;
+                case '-':
+                    temp_res = var_dict.at(operand1) - var_dict.at(operand2);
+                    break;
+                case '*':
+                    temp_res = var_dict.at(operand1) * var_dict.at(operand2);
+                    break;
+                case '/':
+                    if (var_dict.at(operand2) == 0) {
+                        std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
+                    temp_res = var_dict.at(operand1) / var_dict.at(operand2);
+                    break;
+                default:
+                    break;
+                }
+            }
+            
+
+            if (op1[0] != '=') {
+                // format is not correct
+                std::cout << "Expression is invalid" << std::endl;
+                return 0;
+            }
+
+            if (var_exist(var) == 0) {
+                var_dict.insert(std::pair<std::string, int>(var, temp_res));
+            }
+            else {
+                var_dict.at(var) = temp_res;
+            }
+            result = temp_res;
+            return 1;
+            break;
         }
         default:
         {
-        return 0;
+            return 0;
         }
     }
     return 0;
