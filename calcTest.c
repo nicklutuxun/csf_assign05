@@ -20,6 +20,7 @@ void cleanup(TestObjs *objs) {
 }
 
 void testEvalLiteral(TestObjs *objs);
+void testEvalLiteralNegative(TestObjs *objs);
 void testAssignment(TestObjs *objs);
 void testComputation(TestObjs *objs);
 void testComputationAndAssignment(TestObjs *objs);
@@ -30,6 +31,7 @@ int main(void) {
 	TEST_INIT();
 
 	TEST(testEvalLiteral);
+	TEST(testEvalLiteralNegative);
 	TEST(testAssignment);
 	TEST(testComputation);
 	TEST(testComputationAndAssignment);
@@ -45,6 +47,14 @@ void testEvalLiteral(TestObjs *objs) {
 	result = 0;
 	ASSERT(0 != calc_eval(objs->calc, "42", &result));
 	ASSERT(42 == result);
+}
+
+void testEvalLiteralNegative(TestObjs *objs) {
+	int result;
+
+	result = 0;
+	ASSERT(0 != calc_eval(objs->calc, "-42", &result));
+	ASSERT(-42 == result);
 }
 
 void testAssignment(TestObjs *objs) {
