@@ -322,7 +322,13 @@ extern "C" int Calc::is_variable(std::string operand) {
 
 extern "C" int Calc::is_integer(std::string operand) {
     for (std::string::iterator it = operand.begin(); it != operand.end(); it++)
-    {
+    {   
+        if ((it == operand.begin()) && (*it == 45))
+        {
+            continue;
+        }
+        
+        
         if (isdigit(*it) == 0)
         {
             return 0;       // operand is not valid integer
