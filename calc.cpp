@@ -246,6 +246,12 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
             std::string operand2 = tokens.at(4);
             int temp_res = 0;
 
+            if (op1 != "=" || is_variable(var) == 0)
+            {
+                return 0;
+            }
+            
+
             if (is_integer(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op2) == 1)
             {
                 switch (op2[0])
@@ -298,6 +304,39 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                 default:
                     break;
                 }
+            }
+            else if (is_integer(operand1) == 1 && is_variable(operand2) == 1 && is_operator(op2) == 1)
+            {   
+                if (var_exist(operand2) == 0)
+                {
+                    return 0;
+                }
+
+                switch (op2[0])
+                {
+                case '+':
+                    result = std::stoi(operand1) + var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '-':
+                    result = std::stoi(operand1) - var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '*':
+                    result = std::stoi(operand1) * var_dict.at(operand2);
+                    return 1;
+                    break;
+                case '/':
+                    if (var_dict.at(operand2) == 0) {
+                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                        return 0;
+                    }
+                    result = std::stoi(operand1) / var_dict.at(operand2);
+                    return 1;
+                    break;
+                default:
+                    break;
+                }
             } 
             else if (is_variable(operand1) == 1 && is_variable(operand2) == 1 && is_operator(op2) == 1)
             {   
@@ -310,12 +349,15 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                 {
                 case '+':
                     temp_res = var_dict.at(operand1) + var_dict.at(operand2);
+                    return 1;
                     break;
                 case '-':
                     temp_res = var_dict.at(operand1) - var_dict.at(operand2);
+                    return 1;
                     break;
                 case '*':
                     temp_res = var_dict.at(operand1) * var_dict.at(operand2);
+                    return 1;
                     break;
                 case '/':
                     if (var_dict.at(operand2) == 0) {
@@ -323,6 +365,7 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                         return 0;
                     }
                     temp_res = var_dict.at(operand1) / var_dict.at(operand2);
+                    return 1;
                     break;
                 default:
                     break;
