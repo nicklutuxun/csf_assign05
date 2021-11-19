@@ -108,8 +108,9 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             }
-            else if (is_operand(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op) == 1)
-            {
+            else if (is_variable(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op) == 1)
+            {   
+
                 switch (op[0])
                 {
                 case '+':
@@ -146,42 +147,55 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             } 
-            else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op) == 1)
-            {
-                switch (op[0])
+            else if (is_variable(operand1) == 1 && is_variable(operand2) == 1 && is_operator(op) == 1)
+            {   
+                if (var_exist(operand1) == 0 || var_exist(operand2) == 0)
                 {
-                case '+':
-                    result = var_dict.at(operand1) + var_dict.at(operand2);
-                    return 1;
-                    break;
-                case '-':
-                    result = var_dict.at(operand1) - var_dict.at(operand2);
-                    return 1;
-                    break;
-                case '*':
-                    result = var_dict.at(operand1) * var_dict.at(operand2);
-                    return 1;
-                    break;
-                case '/':
-                    if (var_dict.at(operand2) == 0) {
-                        // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
-                        return 0;
-                    }
-                    result = var_dict.at(operand1) / var_dict.at(operand2);
-                    return 1;
-                    break;
-                case '=':
-                    if (var_exist(operand1) == 0)
+                    switch (op[0])
                     {
-                        var_dict.insert(std::pair<std::string, int>(operand1, var_dict.at(operand2)));
-                    } else {
-                        var_dict.at(operand1) = var_dict.at(operand2);
+                    case '=':
+                        if (var_exist(operand2) == 0)
+                        {
+                            return 0;       // var2 does not exist in dictionary
+                        }
+                        else if (var_exist(operand1) == 0)
+                        {
+                            var_dict.insert(std::pair<std::string, int>(operand1, var_dict.at(operand2)));
+                        } else {
+                            var_dict.at(operand1) = var_dict.at(operand2);
+                        }
+                        result = var_dict.at(operand1);
+                        return 1;
+                        break;
+                    default:
+                        break;
                     }
-                    result = var_dict.at(operand1);
-                    return 1;
-                    break;
-                default:
-                    break;
+                } else {
+                    switch (op[0])
+                    {
+                    case '+':
+                        result = var_dict.at(operand1) + var_dict.at(operand2);
+                        return 1;
+                        break;
+                    case '-':
+                        result = var_dict.at(operand1) - var_dict.at(operand2);
+                        return 1;
+                        break;
+                    case '*':
+                        result = var_dict.at(operand1) * var_dict.at(operand2);
+                        return 1;
+                        break;
+                    case '/':
+                        if (var_dict.at(operand2) == 0) {
+                            // std::cout << "Expression is invalid (attempt to divide by 0)." << std::endl;
+                            return 0;
+                        }
+                        result = var_dict.at(operand1) / var_dict.at(operand2);
+                        return 1;
+                        break;
+                    default:
+                        break;
+                    }
                 }
             }
             break;
@@ -220,8 +234,13 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             }
-            else if (is_operand(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op2) == 1)
-            {
+            else if (is_variable(operand1) == 1 && is_integer(operand2) == 1 && is_operator(op2) == 1)
+            {   
+                if (var_exist(operand1) == 0)
+                {
+                    return 0;       // var1 does not exist in dictionary
+                }
+
                 switch (op2[0])
                 {
                 case '+':
@@ -244,8 +263,13 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                     break;
                 }
             } 
-            else if (is_operand(operand1) == 1 && is_operand(operand2) == 1 && is_operator(op2) == 1)
-            {
+            else if (is_variable(operand1) == 1 && is_variable(operand2) == 1 && is_operator(op2) == 1)
+            {   
+                if (var_exist(operand1) == 0 || var_exist(operand2))
+                {
+                    return 0;       // var1 or var2 does not exist in dictionary
+                }
+
                 switch (op2[0])
                 {
                 case '+':
