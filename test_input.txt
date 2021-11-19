@@ -1,0 +1,7 @@
+a = 2
+b = 3
+a + b
+quit
+a
+b
+a + b
