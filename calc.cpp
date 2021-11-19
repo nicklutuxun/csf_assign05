@@ -193,6 +193,11 @@ extern "C" int Calc::evalExpr(const std::string &expr, int &result) {
                         result = var_dict.at(operand1) / var_dict.at(operand2);
                         return 1;
                         break;
+                    case '=':
+                        var_dict.at(operand1) = var_dict.at(operand2);
+                        result = var_dict.at(operand1);
+                        return 1;
+                        break;
                     default:
                         break;
                     }
