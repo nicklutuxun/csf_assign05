@@ -61,8 +61,16 @@ void testAssignment(TestObjs *objs) {
 	int result;
 
 	result = 0;
+	ASSERT(0 == calc_eval(objs->calc, "a = b", &result));
+	ASSERT(0 == result);
+	
+	result = 0;
 	ASSERT(0 != calc_eval(objs->calc, "a = 4", &result));
 	ASSERT(4 == result);
+
+	result = 0;
+	ASSERT(0 == calc_eval(objs->calc, "a = b", &result));
+	ASSERT(0 == result);
 
 	result = 0;
 	ASSERT(0 != calc_eval(objs->calc, "a", &result));
@@ -71,6 +79,10 @@ void testAssignment(TestObjs *objs) {
 	result = 0;
 	ASSERT(0 != calc_eval(objs->calc, "b = a", &result));
 	ASSERT(4 == result);
+
+	result = 0;
+	ASSERT(0 != calc_eval(objs->calc, "a + b", &result));
+	ASSERT(8 == result);
 }
 
 void testComputation(TestObjs *objs) {
