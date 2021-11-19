@@ -1,3 +1,11 @@
+/*
+ * Nick Lu
+ * tlu32@jhu.edu
+ * 
+ * Jiarui Chen
+ * jchen324@jhu.edu
+ */
+
 #include "calc.h"
 
 #include <iostream>
