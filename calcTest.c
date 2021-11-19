@@ -19,9 +19,11 @@ void cleanup(TestObjs *objs) {
 	free(objs);
 }
 
+void testSingleVariable(TestObjs *objs);
 void testEvalLiteral(TestObjs *objs);
 void testEvalLiteralNegative(TestObjs *objs);
 void testAssignment(TestObjs *objs);
+void testAssignment2(TestObjs *objs);
 void testComputation(TestObjs *objs);
 void testComputationAndAssignment(TestObjs *objs);
 void testUpdate(TestObjs *objs);
@@ -30,15 +32,25 @@ void testInvalidExpr(TestObjs *objs);
 int main(void) {
 	TEST_INIT();
 
+	TEST(testSingleVariable);
 	TEST(testEvalLiteral);
 	TEST(testEvalLiteralNegative);
 	TEST(testAssignment);
+	TEST(testAssignment2);
 	TEST(testComputation);
 	TEST(testComputationAndAssignment);
 	TEST(testUpdate);
 	TEST(testInvalidExpr);
 
 	TEST_FINI();
+}
+
+void testSingleVariable(TestObjs *objs) {
+	int result;
+
+	result = 0;
+	ASSERT(0 == calc_eval(objs->calc, "a", &result));
+	ASSERT(0 == result);
 }
 
 void testEvalLiteral(TestObjs *objs) {
@@ -59,6 +71,10 @@ void testEvalLiteralNegative(TestObjs *objs) {
 
 void testAssignment(TestObjs *objs) {
 	int result;
+
+	result = 0;
+	ASSERT(0 == calc_eval(objs->calc, "a + b", &result));
+	ASSERT(0 == result);
 
 	result = 0;
 	ASSERT(0 == calc_eval(objs->calc, "a = b", &result));
@@ -83,6 +99,22 @@ void testAssignment(TestObjs *objs) {
 	result = 0;
 	ASSERT(0 != calc_eval(objs->calc, "a + b", &result));
 	ASSERT(8 == result);
+}
+
+void testAssignment2(TestObjs *objs) {
+int result = 0;
+	
+	result = 0;
+	ASSERT(0 != calc_eval(objs->calc, "a = 3", &result));
+	ASSERT(3 == result);
+
+	result = 0;
+	ASSERT(0 != calc_eval(objs->calc, "b = 4", &result));
+	ASSERT(4 == result);
+
+	result = 0;
+	ASSERT(0 != calc_eval(objs->calc, "a = b", &result));
+	ASSERT(4 == result);
 }
 
 void testComputation(TestObjs *objs) {
